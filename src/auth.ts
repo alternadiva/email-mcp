@@ -38,8 +38,13 @@ export async function getAuthenticatedClient(): Promise<OAuth2Client> {
     // refresh token if expired
     if (token.expiry_date && token.expiry_date < Date.now()) {
       const { credentials: newCreds } = await oAuth2Client.refreshAccessToken();
-      oAuth2Client.setCredentials(newCreds);
-      await fs.writeFile(TOKEN_PATH, JSON.stringify(newCreds, null, 2));
+      const updatedToken = {
+        ...token,
+        ...newCreds,
+        refresh_token: newCreds.refresh_token ?? token.refresh_token,
+      };
+      oAuth2Client.setCredentials(updatedToken);
+      await fs.writeFile(TOKEN_PATH, JSON.stringify(updatedToken, null, 2));
     }
 
     return oAuth2Client;
