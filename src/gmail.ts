@@ -27,7 +27,7 @@ export async function getUnreadEmails(
       const response = await gmail.users.messages.get({
         userId: "me",
         id: message.id!,
-        format: "full", // full=headers+body (metadata=headers only)
+        format: "full", // full=headers+body (metadata=headers only, minimal=ids only)
       });
 
       const messageDetail = response.data;
