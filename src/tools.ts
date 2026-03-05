@@ -7,12 +7,16 @@ export const toolDefinitions = [
       type: "object" as const,
       properties: {
         maxResults: {
-          type: "number",
+          type: "integer",
+          minimum: 1,
+          maximum: 10,
+          default: 5,
           description:
             "Maximum number of unread emails to retrieve (default: 5, max: 10)",
         },
       },
       required: [],
+      additionalProperties: false,
     },
   },
 
