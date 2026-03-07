@@ -70,9 +70,16 @@ interface CreateDraftArgs {
   replyBody: string;
 }
 
-export async function handleToolCall(
-  name: string,
-  args: GetUnreadArgs | CreateDraftArgs,
+type ToolName = "get_unread_emails" | "create_draft_reply";
+
+type ToolArgsMap = {
+  get_unread_emails: GetUnreadArgs;
+  create_draft_reply: CreateDraftArgs;
+};
+
+export async function handleToolCall<T extends ToolName>(
+  name: T,
+  args: ToolArgsMap[T],
   auth: OAuth2Client,
 ): Promise<string> {
   switch (name) {
