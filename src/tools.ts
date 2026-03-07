@@ -1,3 +1,6 @@
+import { OAuth2Client } from "google-auth-library";
+import { createDraftReply, getUnreadEmails } from "./gmail.js";
+
 export const toolDefinitions = [
   {
     name: "get_unread_emails",
@@ -54,3 +57,81 @@ export const toolDefinitions = [
     },
   },
 ];
+
+interface GetUnreadArgs {
+  maxResults?: number;
+}
+
+interface CreateDraftArgs {
+  messageId: string;
+  threadId: string;
+  to: string;
+  subject: string;
+  replyBody: string;
+}
+
+type ToolName = "get_unread_emails" | "create_draft_reply";
+
+type ToolArgsMap = {
+  get_unread_emails: GetUnreadArgs;
+  create_draft_reply: CreateDraftArgs;
+};
+
+export async function handleToolCall<T extends ToolName>(
+  name: T,
+  args: ToolArgsMap[T],
+  auth: OAuth2Client,
+): Promise<string> {
+  switch (name) {
+    case "get_unread_emails": {
+      const { maxResults } = args as GetUnreadArgs;
+      const maxRes = Math.min(maxResults || 5, 10);
+      const emails = await getUnreadEmails(auth, maxRes);
+
+      if (emails.length === 0) {
+        return "No unread emails found.";
+      }
+
+      // format emails for Claude
+      const formatted = emails.map(
+        (email, i) =>
+          `- Email nr${i + 1}
+From: ${email.from}
+Subject: ${email.subject}
+Date: ${email.date}
+Message ID: ${email.id}
+Thread ID: ${email.threadId}
+Snippet: ${email.snippet}
+Body:
+${email.body}
+`,
+      );
+
+      return `${emails.length} unread email(s):
+              ${formatted.join("\n")}`;
+    }
+
+    case "create_draft_reply": {
+      const { messageId, threadId, to, subject, replyBody } =
+        args as CreateDraftArgs;
+
+      const draft = await createDraftReply(
+        auth,
+        messageId,
+        threadId,
+        to,
+        subject,
+        replyBody,
+      );
+
+      return `Draft reply created in Gmail Drafts folder:
+Draft ID: ${draft.draftId}
+To: ${draft.to}
+Subject: ${draft.subject}
+Thread ID: ${draft.threadId}`;
+    }
+
+    default:
+      throw new Error(`unknown tool ${name}`);
+  }
+}
