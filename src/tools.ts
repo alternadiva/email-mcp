@@ -96,14 +96,14 @@ export async function handleToolCall<T extends ToolName>(
       const formatted = emails.map(
         (email, i) =>
           `- Email nr${i + 1}
-            From: ${email.from}
-            Subject: ${email.subject}
-            Date: ${email.date}
-            Message ID: ${email.id}
-            Thread ID: ${email.threadId}
-            Snippet: ${email.snippet}
-            Body:
-            ${email.body}
+From: ${email.from}
+Subject: ${email.subject}
+Date: ${email.date}
+Message ID: ${email.id}
+Thread ID: ${email.threadId}
+Snippet: ${email.snippet}
+Body:
+${email.body}
 `,
       );
 
@@ -125,10 +125,10 @@ export async function handleToolCall<T extends ToolName>(
       );
 
       return `Draft reply created in Gmail Drafts folder:
-        Draft ID: ${draft.draftId}
-        To: ${draft.to}
-        Subject: ${draft.subject}
-        Thread ID: ${draft.threadId}`;
+Draft ID: ${draft.draftId}
+To: ${draft.to}
+Subject: ${draft.subject}
+Thread ID: ${draft.threadId}`;
     }
 
     default:
