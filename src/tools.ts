@@ -92,7 +92,7 @@ export async function handleToolCall<T extends ToolName>(
         return "No unread emails found.";
       }
 
-      // format emailsfor Claude
+      // format emails for Claude
       const formatted = emails.map(
         (email, i) =>
           `- Email nr${i + 1}
