@@ -11,7 +11,7 @@ export async function getUnreadEmails(
   // list message ids matching is:unread query
   const listResponse = await gmail.users.messages.list({
     userId: "me", // me=authenticated user
-    q: "is:unread",
+    q: "category:primary is:unread",
     maxResults,
   });
 
