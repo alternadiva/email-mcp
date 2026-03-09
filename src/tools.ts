@@ -1,5 +1,6 @@
 import { OAuth2Client } from "google-auth-library";
 import { createDraftReply, getUnreadEmails } from "./gmail.js";
+import { getKnowledgeContext } from "./knowledge.js";
 
 export const toolDefinitions = [
   {
@@ -56,6 +57,17 @@ export const toolDefinitions = [
       required: ["messageId", "threadId", "to", "subject", "replyBody"],
     },
   },
+
+  {
+    name: "get_style_guide",
+    description:
+      "Retrieve the email style guide and writing preferences. Use this before creating a draft reply to match the writing style.",
+    inputSchema: {
+      type: "object" as const,
+      properties: {},
+      required: [],
+    },
+  },
 ];
 
 interface GetUnreadArgs {
@@ -70,18 +82,24 @@ interface CreateDraftArgs {
   replyBody: string;
 }
 
-export type ToolName = "get_unread_emails" | "create_draft_reply";
+interface GetStyleGuideArgs {}
+
+export type ToolName =
+  | "get_unread_emails"
+  | "create_draft_reply"
+  | "get_style_guide";
 
 type ToolArgsMap = {
   get_unread_emails: GetUnreadArgs;
   create_draft_reply: CreateDraftArgs;
+  get_style_guide: GetStyleGuideArgs;
 };
 
 export async function handleToolCall<T extends ToolName>(
   name: T,
   args: ToolArgsMap[T],
   auth: OAuth2Client,
-): Promise<string> {
+) {
   switch (name) {
     case "get_unread_emails": {
       const { maxResults } = args as GetUnreadArgs;
@@ -109,6 +127,13 @@ ${email.body}
 
       return `${emails.length} unread email(s):
               ${formatted.join("\n")}`;
+    }
+
+    case "get_style_guide": {
+      const context = await getKnowledgeContext();
+      return `Here is the email style guide:
+      
+${context}`;
     }
 
     case "create_draft_reply": {

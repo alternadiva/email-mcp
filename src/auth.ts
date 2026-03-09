@@ -17,7 +17,7 @@ const SCOPES = [
 ];
 
 /* load the OAuth2 client */
-export async function getAuthenticatedClient(): Promise<OAuth2Client> {
+export async function getAuthenticatedClient() {
   const credentialsRaw = await fs.readFile(CREDENTIALS_PATH, "utf-8");
   const credentials = JSON.parse(credentialsRaw);
   const { client_id, client_secret, redirect_uris } = credentials.installed;
@@ -54,7 +54,7 @@ export async function getAuthenticatedClient(): Promise<OAuth2Client> {
   }
 }
 
-async function authorise(oAuth2Client: OAuth2Client): Promise<OAuth2Client> {
+async function authorise(oAuth2Client: OAuth2Client) {
   // Google login url
   const authUrl = oAuth2Client.generateAuthUrl({
     access_type: "offline", // refresh token to avoid reauthorising
