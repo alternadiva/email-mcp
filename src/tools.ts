@@ -70,7 +70,7 @@ interface CreateDraftArgs {
   replyBody: string;
 }
 
-type ToolName = "get_unread_emails" | "create_draft_reply";
+export type ToolName = "get_unread_emails" | "create_draft_reply";
 
 type ToolArgsMap = {
   get_unread_emails: GetUnreadArgs;
