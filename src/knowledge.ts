@@ -11,7 +11,7 @@ const KNOWLEDGE_DIR = path.join(__dirname, "..", "knowledge");
 export async function getKnowledgeContext() {
   try {
     const files = await fs.readdir(KNOWLEDGE_DIR);
-    const markdownFiles = files.filter((f) => f.endsWith(".md"));
+    const markdownFiles = files.filter((f) => f.endsWith(".md")).sort();
 
     if (markdownFiles.length === 0) {
       return "No knowledge found";
