@@ -16,7 +16,7 @@ Petra Toth
 - Match the sender's tone (if it's a reply)
 - Keep it natural (should not sound as generic AI)
 - Use the recipient's first name
-- Keep paragraphs short (max. 5 sentesces)
+- Keep paragraphs short (max. 5 sentences)
 - Use "Have a nice day!" before 6:00 PM and "Have a nice evening!" after 6:00 PM
 
 ## Rules
