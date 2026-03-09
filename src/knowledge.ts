@@ -29,7 +29,15 @@ ${content}`;
     );
 
     return contents.join("\n\n");
-  } catch {
-    return "Dir not found";
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "code" in error &&
+      (error as { code?: unknown }).code === "ENOENT"
+    ) {
+      return "Dir not found";
+    }
+    throw error;
   }
 }
