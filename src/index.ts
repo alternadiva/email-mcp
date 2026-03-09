@@ -23,7 +23,7 @@ const mcpServer = new McpServer(
 );
 
 // auth with gmail on startup (token.json or browser auth)
-let authClient = await getAuthenticatedClient();
+const authClient = await getAuthenticatedClient();
 
 // list tools the server provides
 mcpServer.server.setRequestHandler(ListToolsRequestSchema, async () => {
